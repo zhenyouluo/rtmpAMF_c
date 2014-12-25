@@ -2,6 +2,34 @@
 #ifndef _RTMP_AMF_H_
 #define _RTMP_AMF_H_
 
+
+#define AMF_TRUE	1
+#define AMF_FALSE	0
+
+/*
+#define htonll(x) \
+					((uint64_t)( \
+					((((uint64_t)(x)) & 0xff00000000000000LL) >> 56) | \
+					((((uint64_t)(x)) & 0x00ff000000000000LL) >> 40) | \
+					((((uint64_t)(x)) & 0x0000ff0000000000LL) >> 24) | \
+					((((uint64_t)(x)) & 0x000000ff00000000LL) >> 8) | \
+					((((uint64_t)(x)) & 0x00000000ff000000LL) << 8) | \
+					((((uint64_t)(x)) & 0x0000000000ff0000LL) << 24) | \
+					((((uint64_t)(x)) & 0x000000000000ff00LL) << 40) | \
+					((((uint64_t)(x)) & 0x00000000000000ffLL) << 56) \
+					))
+#define ntohll(x)   htonll(x)
+//#define swap(a,b)	(a) = (a) + (b); (b) = (a) - (b); (a) = (b) - (a);
+
+#define swap(a,b) \
+		do{ \
+			a = a + b;	\
+			b = a - b;	\
+			a = a - b;	\
+		}while(0);
+*/
+
+typedef int	amf_bool;
 /*
  The set of possible type markers are listed below (values are represented in hexadecimal format):
  number-marker =  0x00
@@ -49,13 +77,25 @@ typedef enum
 typedef struct
 {
 	amf0_variant_type	type;	
-	void*				value;
+	//void*				value;
+	union
+	{
+		
+	} value;
 } amf0_variant;
 
-/*
- * 
- */
+typedef struct
+{
+	typedef struct
+	{
+		char	*name;
+		amf0_variant	value;	
+	} property;
+	uint32_t	num;
+	property	*item;
+} amf0_object;
+
 int
-amf0_read(const char*, amf0_variant*);
+amf0_read(const char*, uint32_t, amf0_variant*);
 
 #endif //_RTMP_AMF_H_
